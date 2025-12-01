@@ -1,0 +1,76 @@
+# =========================
+# Home Assistant Main Config
+# =========================
+
+# Loads the default set of integrations (recommended baseline).
+default_config:
+
+# -------------------------
+# Frontend / UI
+# -------------------------
+frontend:
+  # Load custom themes from the 'themes' folder.
+  # Using merge_named allows multiple theme files to be combined.
+  themes: !include_dir_merge_named themes
+
+# -------------------------
+# HTTP / Security Settings
+# -------------------------
+http:
+  use_x_forwarded_for: true   # Respect proxy headers (needed if behind reverse proxy).
+  trusted_proxies:            # Define trusted proxy IPs/ranges via secrets.
+    - !secret ha_docker_range
+    - !secret docker_range
+    - !secret ha_docker_ip
+    - !secret laptop_ip
+    - !secret phone_ip
+
+  ip_ban_enabled: true        # Ban IPs after repeated failed login attempts.
+  login_attempts_threshold: 5 # Number of failed logins before ban.
+
+  # Uncomment below if you want HA itself to serve HTTPS directly.
+  # Otherwise, leave commented if SSL is terminated at reverse proxy.
+  # ssl_certificate: /ssl/fullchain.pem
+  # ssl_key: /ssl/privkey.pem
+
+# -------------------------
+# Zigbee Home Automation (ZHA)
+# -------------------------
+zha:
+  zigpy_config:
+    network:
+      channel: 15             # Fixed Zigbee channel (avoid Wi-Fi overlap).
+    ota:
+      otau_directory: /config/zigpy_ota  # Directory for OTA firmware files.
+      ikea_provider: true
+      inovelli_provider: true
+      ledvance_provider: true
+      salus_provider: true
+      sonoff_provider: true
+      tuya_provider: true
+      ewelink_provider: true
+      thirdreality_provider: true
+
+# Toolkit for advanced Zigbee debugging and management.
+zha_toolkit:
+
+# -------------------------
+# Modular Includes
+# -------------------------
+group: !include groups.yaml             # Group definitions.
+automation: !include automations.yaml   # Automations.
+template: !include templates.yaml       # Template sensors/helpers.
+script: !include scripts.yaml           # Scripts.
+scene: !include scenes.yaml             # Scenes.
+
+
+
+# -------------------------
+# Optional: Logging Control
+# -------------------------
+# Uncomment to adjust logging verbosity.
+# logger:
+#   default: warning
+#   logs:
+#     homeassistant.components.zha: debug
+#     zigpy: debug

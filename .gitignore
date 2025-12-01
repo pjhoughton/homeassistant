@@ -1,0 +1,69 @@
+# Home Assistant database and runtime artifacts
+home-assistant_v2.db
+home-assistant_v2.db-shm
+home-assistant_v2.db-wal
+*.db
+*.sqlite
+*.shm
+*.wal
+*.lock
+
+# Home Assistant version file
+.HA_VERSION
+
+# Logs and rotated logs
+home-assistant.log
+*.log
+*.log.old
+*.old
+*.log.*
+
+
+# Zigbee network state
+zigbee.db
+zigbee.db-shm
+zigbee.db-wal
+*.zigbee
+
+# IP bans
+ip_bans.yaml
+
+# SSH keys
+.ssh/
+
+
+# Sensitive files
+secrets.yaml
+*.pem
+*.crt
+*.key
+
+# Runtime data
+.storage/
+.cloud/
+
+# Backups and snapshots
+.backups/
+*.tar
+*.tar.gz
+
+# Media and recordings
+media/
+tts/
+www/
+
+# Python cache and temp files
+__pycache__/
+*.pyc
+*.pyo
+*.swp
+*.tmp
+
+# Hidden system files
+.DS_Store
+Thumbs.db
+
+# Custom components and add-ons
+custom_components/
+esphome/
+
