@@ -1,0 +1,50 @@
+- id: '1765065108927'
+  name: Bedtime
+  entities:
+    switch.office_plug:
+      device_class: outlet
+      friendly_name: Office_plug
+      state: 'off'
+    switch.av_plug:
+      device_class: outlet
+      friendly_name: av_plug
+      state: 'off'
+    switch.salt_lamp_outlet:
+      device_class: outlet
+      friendly_name: salt_lamp Outlet
+      state: 'off'
+    switch.kitchen_light_mss110_main_channel:
+      friendly_name: Kitchen Light (mss110) - Main channel
+      state: 'off'
+    light.bedroom_light:
+      min_color_temp_kelvin: 2700
+      max_color_temp_kelvin: 6500
+      min_mireds: 153
+      max_mireds: 370
+      supported_color_modes:
+      - color_temp
+      - rgb
+      color_mode: color_temp
+      brightness: 30
+      color_temp_kelvin: 6500
+      color_temp: 153
+      hs_color:
+      - 49.231
+      - 1.944
+      rgb_color:
+      - 255
+      - 254
+      - 250
+      xy_color:
+      - 0.326
+      - 0.333
+      friendly_name: bedroom light
+      supported_features: 32
+      togglex_auto: true
+      state: 'on'
+    switch.living_room_plug_0:
+      device_class: outlet
+      friendly_name: living_room_plug 0
+      state: 'off'
+  icon: mdi:bed
+  metadata: {}

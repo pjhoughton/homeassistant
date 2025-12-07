@@ -21,7 +21,8 @@ http:
   trusted_proxies:            # Define trusted proxy IPs/ranges via secrets.
     - !secret ha_docker_range
     - !secret docker_range
-    - !secret ha_docker_ip
+    - !secret server_range
+    - !secret client_range
     - !secret laptop_ip
     - !secret phone_ip
 
@@ -50,9 +51,20 @@ zha:
       tuya_provider: true
       ewelink_provider: true
       thirdreality_provider: true
+      zha_quirks: true
 
 # Toolkit for advanced Zigbee debugging and management.
 zha_toolkit:
+
+waste_collection_schedule:
+  sources:
+    - name: apps_imactivate_com
+      args:
+        postcode: !secret my_postcode
+        town: !secret my_town
+        street: !secret my_street
+        number: !secret my_number
+        
 
 # -------------------------
 # Modular Includes
