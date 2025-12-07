@@ -1,0 +1,18 @@
+- id: '1765118071639'
+  alias: Sync plug and left switch
+  description: ''
+  triggers:
+  - entity_id:
+    - switch.office_plug
+    - light.office_double_switch_light
+    trigger: state
+  actions:
+  - target:
+      entity_id: '{{ ''switch.office_plug'' if trigger.entity_id == ''light.office_double_switch_light''
+        else ''light.office_double_switch_light'' }}'
+    action: homeassistant.update_entity
+  - target:
+      entity_id: "{% if trigger.entity_id == 'switch.office_plug' %}\n  light.office_double_switch_light\n{%
+        else %}\n  switch.office_plug\n{% endif %}\n"
+    action: "{% if trigger.to_state.state == 'on' %}\n  homeassistant.turn_on\n{%
+      else %}\n  homeassistant.turn_off\n{% endif %}\n"
