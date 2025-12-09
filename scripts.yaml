@@ -1,0 +1,12 @@
+bedtime_ordered:
+  alias: Bedtime Ordered
+  sequence:
+  - target:
+      entity_id: scene.bedtime
+    action: scene.turn_on
+  - delay: 00:00:10
+  - target:
+      entity_id: switch.kitchen_plug
+    action: switch.turn_off
+  mode: single
+  description: ''

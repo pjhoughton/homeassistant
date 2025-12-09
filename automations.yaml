@@ -16,3 +16,134 @@
         else %}\n  switch.office_plug\n{% endif %}\n"
     action: "{% if trigger.to_state.state == 'on' %}\n  homeassistant.turn_on\n{%
       else %}\n  homeassistant.turn_off\n{% endif %}\n"
+- id: '1765314609026'
+  alias: 'Morning lights '
+  description: Turn on salt lamp, then kitchen plug, then kitchen light outlet if
+    dark and motion detected
+  triggers:
+  - entity_id: binary_sensor.living_room_pir
+    to: 'on'
+    trigger: state
+  - entity_id: binary_sensor.kitchen_pir
+    to: 'on'
+    trigger: state
+  conditions:
+  - condition: sun
+    after: sunset
+    before: sunrise
+  actions:
+  - target:
+      entity_id: switch.salt_lamp_outlet
+    action: switch.turn_on
+  - target:
+      entity_id: switch.kitchen_plug
+    action: switch.turn_on
+  - delay: '00:00:00.5'
+  - target:
+      entity_id: switch.kitchen_light_outlet
+    action: switch.turn_on
+  - wait_for_trigger:
+    - value_template: "{{ is_state('binary_sensor.living_room_pir','off')\n   and
+        is_state('binary_sensor.kitchen_pir','off') }}\n"
+      for: 00:20:00
+      trigger: template
+  - target:
+      entity_id:
+      - switch.salt_lamp_outlet
+      - switch.kitchen_light_outlet
+    action: switch.turn_off
+  mode: restart
+- id: '1765314842666'
+  alias: 'Lights off sunrise '
+  description: Turn off kitchen light outlet and salt lamp 15 minutes after sunrise
+  triggers:
+  - event: sunrise
+    offset: 00:15:00
+    trigger: sun
+  actions:
+  - target:
+      entity_id:
+      - switch.kitchen_light_outlet
+      - switch.salt_lamp_outlet
+    action: switch.turn_off
+  mode: single
+- id: '1765314893973'
+  alias: Lights on sunset
+  description: Ensure kitchen plug, light outlet, and salt lamp are on 5 minutes before
+    sunset
+  triggers:
+  - event: sunset
+    offset: -00:05:00
+    trigger: sun
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: switch.kitchen_plug
+      state: 'off'
+    - condition: state
+      entity_id: switch.kitchen_light_outlet
+      state: 'off'
+    - condition: state
+      entity_id: switch.salt_lamp_outlet
+      state: 'off'
+  actions:
+  - target:
+      entity_id:
+      - switch.kitchen_plug
+      - switch.kitchen_light_outlet
+      - switch.salt_lamp_outlet
+    action: switch.turn_on
+  mode: single
+- id: '1765315688617'
+  alias: Kitchen Button Toggle Lights
+  description: Ensure kitchen plug is on, then toggle lights when Kitchen Button is
+    pressed
+  triggers:
+  - device_id: caddb361d049ca61c5aa90d33966e74f
+    domain: zha
+    type: remote_button_short_press
+    subtype: button
+    trigger: device
+  conditions: []
+  actions:
+  - target:
+      entity_id: switch.kitchen_plug
+    action: switch.turn_on
+  - target:
+      entity_id:
+      - switch.kitchen_light_outlet
+      - switch.salt_lamp_outlet
+    action: switch.toggle
+  mode: single
+- id: '1765315741794'
+  alias: Kitchen Button Double Click Toggle AV Plug
+  description: Toggle AV plug when Kitchen Button is double clicked
+  triggers:
+  - device_id: caddb361d049ca61c5aa90d33966e74f
+    domain: zha
+    type: remote_button_double_press
+    subtype: button
+    trigger: device
+  conditions: []
+  actions:
+  - target:
+      entity_id: switch.av_plug
+    action: switch.toggle
+  mode: single
+- id: '1765315913549'
+  alias: Kitchen Button Long Press Bedtime Script
+  description: Wait 2 minutes after long press, then run the Bedtime Ordered script
+  triggers:
+  - device_id: caddb361d049ca61c5aa90d33966e74f
+    domain: zha
+    type: remote_button_long_press
+    subtype: button
+    trigger: device
+  conditions: []
+  actions:
+  - delay: 00:02:00
+  - target:
+      entity_id: script.bedtime_ordered
+    action: script.turn_on
+  mode: single
