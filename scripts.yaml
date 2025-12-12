@@ -9,4 +9,3 @@ bedtime_ordered:
       entity_id: switch.kitchen_plug
     action: switch.turn_off
   mode: single
-  description: ''
