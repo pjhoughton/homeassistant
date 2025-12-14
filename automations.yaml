@@ -107,11 +107,11 @@
   alias: Lights on sunset
   description: Ensure kitchen plug, light outlet, and salt lamp are on 5 minutes before
     sunset
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: -00:05:00
-  condition:
+  triggers:
+  - event: sunset
+    offset: -00:10:00
+    trigger: sun
+  conditions:
   - condition: or
     conditions:
     - condition: state
@@ -123,13 +123,13 @@
     - condition: state
       entity_id: switch.salt_lamp_outlet
       state: 'off'
-  action:
-  - service: switch.turn_on
-    target:
+  actions:
+  - target:
       entity_id:
       - switch.kitchen_plug
       - switch.kitchen_light_outlet
       - switch.salt_lamp_outlet
+    action: switch.turn_on
   mode: single
 - id: '1765315688617'
   alias: Kitchen Button Toggle Lights
@@ -179,4 +179,44 @@
   - service: script.turn_on
     target:
       entity_id: script.bedtime_ordered
+  mode: single
+- id: '1765728373032'
+  alias: Office Double Switch Sync On (dark only)
+  description: 'When office_double_switch_light is turned on, also turn on office_double_switch_light_2
+    if it''s before sunrise+15 minutes or after sunset-15 minutes.
+
+    '
+  triggers:
+  - entity_id: light.office_double_switch_light
+    to: 'on'
+    trigger: state
+  conditions:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+      before_offset: +00:15:00
+    - condition: sun
+      after: sunset
+      after_offset: -00:15:00
+  actions:
+  - target:
+      entity_id: light.office_double_switch_light_2
+    action: light.turn_on
+  mode: single
+- id: '1765728446907'
+  alias: Office Double Switch Sync Off
+  description: 'When office_double_switch_light is turned off, also turn off office_double_switch_light_2
+    if it is currently on.
+
+    '
+  triggers:
+  - entity_id: light.office_double_switch_light
+    to: 'off'
+    trigger: state
+  conditions: []
+  actions:
+  - target:
+      entity_id: light.office_double_switch_light_2
+    action: light.turn_off
   mode: single
