@@ -92,16 +92,20 @@
 - id: '1765314842666'
   alias: Lights off sunrise
   description: Turn off kitchen light outlet and salt lamp 15 minutes after sunrise
-  trigger:
-  - platform: sun
-    event: sunrise
-    offset: 00:15:00
-  action:
-  - service: switch.turn_off
-    target:
+  triggers:
+  - event: sunrise
+    offset: 00:30:00
+    trigger: sun
+  actions:
+  - target:
       entity_id:
       - switch.kitchen_light_outlet
       - switch.salt_lamp_outlet
+    action: switch.turn_off
+  - type: turn_off
+    device_id: 3445767a72a4715d3c1b2b851910753b
+    entity_id: 26f311b2f639ca2a05008a8ac4c42b0f
+    domain: light
   mode: single
 - id: '1765314893973'
   alias: Lights on sunset
@@ -109,7 +113,7 @@
     sunset
   triggers:
   - event: sunset
-    offset: -00:10:00
+    offset: -00:20:00
     trigger: sun
   conditions:
   - condition: or
@@ -132,53 +136,57 @@
     action: switch.turn_on
   mode: single
 - id: '1765315688617'
-  alias: Kitchen Button Toggle Lights
+  alias: Upstairs Button Toggle Lights
   description: Ensure kitchen plug is on, then toggle lights when Kitchen Button is
     pressed
-  trigger:
-  - platform: device
-    device_id: caddb361d049ca61c5aa90d33966e74f
+  triggers:
+  - device_id: caddb361d049ca61c5aa90d33966e74f
     domain: zha
     type: remote_button_short_press
     subtype: button
-  action:
-  - service: switch.turn_on
-    target:
+    trigger: device
+  actions:
+  - target:
       entity_id: switch.kitchen_plug
-  - service: switch.toggle
-    target:
+    action: switch.turn_on
+  - target:
       entity_id:
       - switch.kitchen_light_outlet
       - switch.salt_lamp_outlet
+    action: switch.toggle
   mode: single
 - id: '1765315741794'
-  alias: Kitchen Button Double Click Toggle AV Plug
+  alias: Upstairs Button Double Click Toggle AV Plug
   description: Toggle AV plug when Kitchen Button is double clicked
-  trigger:
-  - platform: device
-    device_id: caddb361d049ca61c5aa90d33966e74f
+  triggers:
+  - device_id: caddb361d049ca61c5aa90d33966e74f
     domain: zha
     type: remote_button_double_press
     subtype: button
-  action:
-  - service: switch.toggle
-    target:
+    trigger: device
+  actions:
+  - target:
       entity_id: switch.av_plug
+    action: switch.toggle
   mode: single
 - id: '1765315913549'
-  alias: Kitchen Button Long Press Bedtime Script
-  description: Wait 2 minutes after long press, then run the Bedtime Ordered script
-  trigger:
-  - platform: device
+  alias: Upstairs Button Long Press Bedtime Script
+  description: Run bedtime scene, wait 5 seconds, then turn off the plug
+  triggers:
+  - domain: zha
     device_id: caddb361d049ca61c5aa90d33966e74f
-    domain: zha
     type: remote_button_long_press
     subtype: button
-  action:
-  - delay: 00:02:00
-  - service: script.turn_on
-    target:
-      entity_id: script.bedtime_ordered
+    trigger: device
+  actions:
+  - target:
+      entity_id: scene.bedtime
+    action: scene.turn_on
+  - delay: 00:00:05
+  - target:
+      device_id: a089abc1f60dcb347028ed2c67008c3e
+      entity_id: switch.96fbbfd7bff006d91eeb3f9ba94a151e
+    action: switch.turn_off
   mode: single
 - id: '1765728373032'
   alias: Office Double Switch Sync On (dark only)
@@ -219,4 +227,56 @@
   - target:
       entity_id: light.office_double_switch_light_2
     action: light.turn_off
+  mode: single
+- id: '1766592047367'
+  alias: Kitchen button toggle downstairs lights
+  description: ''
+  triggers:
+  - device_id: 315387a9f30043b38e058ce2ae6f8975
+    domain: zha
+    type: remote_button_short_press
+    subtype: button
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 76d71b54e10693625fa34a9acff87bd6
+    entity_id: f94f94684e1bab21a35dbfadb3123513
+    domain: switch
+  - type: toggle
+    device_id: 1d4e7393f370a58692acf36fc9f49c44
+    entity_id: 4bfcb15b191bd0457b7bb182cb9c5851
+    domain: switch
+  mode: single
+- id: '1766592150822'
+  alias: 'Kitchen button AV toggle '
+  description: ''
+  triggers:
+  - device_id: 315387a9f30043b38e058ce2ae6f8975
+    domain: zha
+    type: remote_button_double_press
+    subtype: button
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 161c44d43161cf4763d51da0782c9493
+    entity_id: e1134b684179cc87e1ef12fc46561343
+    domain: switch
+  mode: single
+- id: '1766592289378'
+  alias: Kitchen button toggle office plug
+  description: ''
+  triggers:
+  - device_id: 315387a9f30043b38e058ce2ae6f8975
+    domain: zha
+    type: remote_button_long_press
+    subtype: button
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 8da56138689c88542dc461f085b3854f
+    entity_id: 2eb381e848cbc02f792ccc91ac084daa
+    domain: light
   mode: single
