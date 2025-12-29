@@ -137,8 +137,8 @@
   mode: single
 - id: '1765315688617'
   alias: Upstairs Button Toggle Lights
-  description: Ensure kitchen plug is on, then toggle lights when Kitchen Button is
-    pressed
+  description: Ensure kitchen plug and salt lamp are on, then turn on kitchen light
+    when Kitchen Button is pressed
   triggers:
   - device_id: caddb361d049ca61c5aa90d33966e74f
     domain: zha
@@ -147,13 +147,14 @@
     trigger: device
   actions:
   - target:
-      entity_id: switch.kitchen_plug
-    action: switch.turn_on
-  - target:
       entity_id:
-      - switch.kitchen_light_outlet
+      - switch.kitchen_plug
       - switch.salt_lamp_outlet
-    action: switch.toggle
+    action: switch.turn_on
+  - delay: 00:00:02
+  - target:
+      entity_id: switch.kitchen_light_outlet
+    action: switch.turn_on
   mode: single
 - id: '1765315741794'
   alias: Upstairs Button Double Click Toggle AV Plug
@@ -239,14 +240,11 @@
     trigger: device
   conditions: []
   actions:
-  - type: toggle
-    device_id: 76d71b54e10693625fa34a9acff87bd6
-    entity_id: f94f94684e1bab21a35dbfadb3123513
-    domain: switch
-  - type: toggle
-    device_id: 1d4e7393f370a58692acf36fc9f49c44
-    entity_id: 4bfcb15b191bd0457b7bb182cb9c5851
-    domain: switch
+  - target:
+      entity_id:
+      - switch.salt_lamp_outlet
+      - switch.kitchen_light_mss110_main_channel
+    action: switch.toggle
   mode: single
 - id: '1766592150822'
   alias: 'Kitchen button AV toggle '
